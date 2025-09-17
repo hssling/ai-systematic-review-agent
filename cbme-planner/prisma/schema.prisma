@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Batch {
+  id        String    @id @default(cuid())
+  name      String
+  phase     String
+  year      Int
+  subjects  Subject[]
+  students  Int       @default(150)
+  schedules Schedule[]
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Subject {
+  id        String    @id @default(cuid())
+  name      String
+  code      String?
+  phase     String
+  batch     Batch?    @relation(fields: [batchId], references: [id])
+  batchId   String?
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Competency {
+  id           String                 @id @default(cuid())
+  code         String                 @unique
+  title        String
+  description  String
+  domain       String
+  millerLevel  String
+  mustKnow     Boolean                @default(true)
+  phase        String
+  subject      String?
+  tags         CompetencyTag[]
+  mappings     SessionCompetency[]
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+}
+
+model Session {
+  id            String                   @id @default(cuid())
+  title         String
+  sessionType   String
+  date          DateTime
+  durationMin   Int
+  location      String?
+  teacher       Teacher?                 @relation(fields: [teacherId], references: [id])
+  teacherId     String?
+  subject       Subject?                 @relation(fields: [subjectId], references: [id])
+  subjectId     String?
+  batch         Batch?                   @relation(fields: [batchId], references: [id])
+  batchId       String?
+  materials     Material[]
+  mappings      SessionCompetency[]
+  schedule      Schedule?                @relation(fields: [scheduleId], references: [id])
+  scheduleId    String?
+  modalities    SessionModality[]
+  alignments    SessionAlignment[]
+  integrations  SessionIntegration[]
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+}
+
+model Schedule {
+  id        String    @id @default(cuid())
+  batch     Batch     @relation(fields: [batchId], references: [id])
+  batchId   String
+  startDate DateTime
+  endDate   DateTime
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model SessionCompetency {
+  sessionId    String
+  competencyId String
+  depth        String
+  blueprintWt  Int        @default(0)
+  session      Session    @relation(fields: [sessionId], references: [id])
+  competency   Competency @relation(fields: [competencyId], references: [id])
+  assessments  SessionCompetencyAssessment[]
+
+  @@id([sessionId, competencyId])
+}
+
+model Teacher {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  dept      String?
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Material {
+  id          String   @id @default(cuid())
+  session     Session  @relation(fields: [sessionId], references: [id])
+  sessionId   String
+  kind        String
+  content     String
+  createdAt   DateTime @default(now())
+}
+
+model CompetencyTag {
+  id            String     @id @default(cuid())
+  competency    Competency @relation(fields: [competencyId], references: [id])
+  competencyId  String
+  value         String
+}
+
+model SessionModality {
+  id         String  @id @default(cuid())
+  session    Session @relation(fields: [sessionId], references: [id])
+  sessionId  String
+  value      String
+}
+
+model SessionAlignment {
+  id         String  @id @default(cuid())
+  session    Session @relation(fields: [sessionId], references: [id])
+  sessionId  String
+  value      String
+}
+
+model SessionIntegration {
+  id         String  @id @default(cuid())
+  session    Session @relation(fields: [sessionId], references: [id])
+  sessionId  String
+  value      String
+}
+
+model SessionCompetencyAssessment {
+  id           String             @id @default(cuid())
+  sessionId    String
+  competencyId String
+  method       String
+  sessionComp  SessionCompetency  @relation(fields: [sessionId, competencyId], references: [sessionId, competencyId])
+}
+
+

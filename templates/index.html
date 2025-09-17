@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Deep Research Agent</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+	<div class="max-w-4xl mx-auto p-6">
+		<h1 class="text-3xl font-bold mb-6">Deep Research Agent</h1>
+		<form action="/start" method="post" class="bg-white shadow rounded p-6 space-y-4">
+			<label class="block">
+				<span class="font-semibold">Objective</span>
+				<textarea name="objective" class="mt-1 w-full border rounded p-2" rows="3" placeholder="E.g., Systematic review of X..." required></textarea>
+			</label>
+			<label class="block">
+				<span class="font-semibold">Research Questions (one per line)</span>
+				<textarea name="research_questions" class="mt-1 w-full border rounded p-2" rows="3"></textarea>
+			</label>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<label class="block">
+					<span class="font-semibold">Include Keywords (comma separated)</span>
+					<input name="include_keywords" class="mt-1 w-full border rounded p-2" />
+				</label>
+				<label class="block">
+					<span class="font-semibold">Exclude Keywords (comma separated)</span>
+					<input name="exclude_keywords" class="mt-1 w-full border rounded p-2" />
+				</label>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+				<label class="block">
+					<span class="font-semibold">Date From</span>
+					<input name="date_from" placeholder="YYYY-MM-DD" class="mt-1 w-full border rounded p-2" />
+				</label>
+				<label class="block">
+					<span class="font-semibold">Date To</span>
+					<input name="date_to" placeholder="YYYY-MM-DD" class="mt-1 w-full border rounded p-2" />
+				</label>
+				<label class="block">
+					<span class="font-semibold">Max Results</span>
+					<input type="number" name="max_results" value="100" class="mt-1 w-full border rounded p-2" />
+				</label>
+			</div>
+			<fieldset class="border rounded p-3">
+				<legend class="font-semibold">Sources</legend>
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+					<label><input type="checkbox" name="sources" value="crossref" checked class="mr-1">Crossref</label>
+					<label><input type="checkbox" name="sources" value="openalex" checked class="mr-1">OpenAlex</label>
+					<label><input type="checkbox" name="sources" value="pubmed" checked class="mr-1">PubMed</label>
+					<label><input type="checkbox" name="sources" value="arxiv" checked class="mr-1">arXiv</label>
+				</div>
+			</fieldset>
+			<div class="flex justify-end">
+				<button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Start Research</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

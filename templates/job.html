@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Job {{ job_id }} - Deep Research Agent</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+	<div class="max-w-3xl mx-auto p-6">
+		<h1 class="text-2xl font-semibold mb-4">Job Progress</h1>
+		<div id="status" class="bg-white shadow rounded p-4 space-y-2">
+			<div><span class="font-semibold">Job ID:</span> {{ job_id }}</div>
+			<div><span class="font-semibold">Stage:</span> <span id="stage">-</span></div>
+			<div><span class="font-semibold">Status:</span> <span id="state">-</span></div>
+			<div class="w-full bg-slate-200 rounded h-3">
+				<div id="bar" class="bg-blue-600 h-3 rounded" style="width:0%"></div>
+			</div>
+			<ul id="logs" class="text-sm list-disc ml-6 space-y-1"></ul>
+		</div>
+	</div>
+	<script>
+	async function poll(){
+		try {
+			const res = await fetch('/api/job/{{ job_id }}');
+			if(!res.ok){ throw new Error('not ok'); }
+			const data = await res.json();
+			document.getElementById('stage').textContent = data.current_stage;
+			document.getElementById('state').textContent = data.status;
+			document.getElementById('bar').style.width = (data.progress||0) + '%';
+			const logs = document.getElementById('logs');
+			logs.innerHTML = '';
+			(data.logs||[]).slice(-10).forEach(l=>{
+				const li = document.createElement('li'); li.textContent = l; logs.appendChild(li);
+			});
+			if(data.status === 'completed'){
+				window.location.href = '/results/{{ job_id }}';
+			} else if (data.status === 'failed'){
+				const li = document.createElement('li'); li.textContent = 'Job failed.'; logs.appendChild(li);
+			}
+		} catch(e) { /* ignore */ }
+	}
+	setInterval(poll, 1000);
+	poll();
+	</script>
+</body>
+</html>

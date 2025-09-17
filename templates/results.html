@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Results - Deep Research Agent</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+	<div class="max-w-5xl mx-auto p-6 space-y-6">
+		<div class="flex justify-between items-center">
+			<h1 class="text-2xl font-semibold">Results</h1>
+			<a href="/manuscript/{{ job_id }}" class="text-blue-700 underline">View Manuscript</a>
+		</div>
+		<section class="bg-white shadow rounded p-4">
+			<h2 class="font-semibold text-lg mb-2">Protocol</h2>
+			<div><strong>Objective:</strong> {{ protocol.objective }}</div>
+			<div><strong>Questions:</strong>
+				<ul class="list-disc ml-6">
+				{% for q in protocol.research_questions %}
+					<li>{{ q }}</li>
+				{% endfor %}
+				</ul>
+			</div>
+			<div class="text-sm text-slate-600">Sources: {{ ', '.join(protocol.sources) }}</div>
+		</section>
+		<section class="bg-white shadow rounded p-4">
+			<h2 class="font-semibold text-lg mb-2">Top Papers</h2>
+			<ol class="list-decimal ml-6 space-y-2">
+			{% for p in papers %}
+				<li>
+					<div class="font-semibold">{{ p.title }}</div>
+					<div class="text-sm text-slate-600">{{ ', '.join(p.authors) }}{% if p.year %} ({{ p.year }}){% endif %} — {{ p.journal or p.source|capitalize }}</div>
+					{% if p.url %}<a href="{{ p.url }}" target="_blank" class="text-blue-700 underline">Link</a>{% endif %}
+				</li>
+			{% endfor %}
+			</ol>
+		</section>
+		<section class="bg-white shadow rounded p-4">
+			<h2 class="font-semibold text-lg mb-2">Analysis</h2>
+			<p class="mb-2">{{ analysis.overview_summary }}</p>
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+				<div>
+					<div class="font-semibold">Themes</div>
+					<ul class="list-disc ml-6 text-sm">
+					{% for t in analysis.themes %}<li>{{ t }}</li>{% endfor %}
+					</ul>
+				</div>
+				<div>
+					<div class="font-semibold">Limitations</div>
+					<ul class="list-disc ml-6 text-sm">
+					{% for t in analysis.limitations %}<li>{{ t }}</li>{% endfor %}
+					</ul>
+				</div>
+				<div>
+					<div class="font-semibold">Recommendations</div>
+					<ul class="list-disc ml-6 text-sm">
+					{% for t in analysis.recommendations %}<li>{{ t }}</li>{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

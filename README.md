@@ -47,6 +47,15 @@ docker build -t deep-research-agent .
 docker run -p 8000:8000 deep-research-agent
 ```
 
+### GHCR (GitHub Container Registry)
+Actions workflow builds and pushes images to `ghcr.io/<owner>/<repo>`.
+Pull and run latest (after your first successful workflow):
+```bash
+docker login ghcr.io -u <your_github_username> -p <your_pat_or_token>
+docker pull ghcr.io/<owner>/<repo>:latest
+docker run -p 8000:8000 ghcr.io/<owner>/<repo>:latest
+```
+
 ## Deploy (Render)
 - Commit the repo to GitHub.
 - On Render, create a new Web Service from repo; choose "Use Docker". Render reads `render.yaml`.

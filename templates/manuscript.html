@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Manuscript - Deep Research Agent</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+	<div class="max-w-4xl mx-auto p-6">
+		<div class="flex justify-between items-center mb-4">
+			<h1 class="text-2xl font-semibold">Manuscript</h1>
+			<a href="/download/{{ job_id }}.md" class="bg-blue-600 text-white px-4 py-2 rounded">Download .md</a>
+		</div>
+		<article class="prose max-w-none bg-white shadow rounded p-6">
+			{{ html | safe }}
+		</article>
+	</div>
+</body>
+</html>
